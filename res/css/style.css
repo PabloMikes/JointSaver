@@ -1,0 +1,62 @@
+body{
+    margin: 0;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+img{
+    display: none;
+}
+/*canvas{
+    background: url(../img/background.jpg);
+}*/
+h1{
+    color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-left: 25px;
+    font-family: "pixel";
+}
+#mainMenu{
+    width: 1500px;
+    height: 1000px;
+    background: url(../img/mainBackground.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#game{
+    display: none;
+}
+button{
+    width: 300px;
+    height: 100px;
+    font-size: 30px;
+    font-family: "pixel";
+}
+#play{
+    margin-right: 50px;
+}
+#leave{
+    margin-left: 50px;
+    transition: 0.7s;
+}
+@font-face {
+    font-family: "pixel";
+    src: url(../font/ARCADECLASSIC.TTF);
+}
+#music{
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
