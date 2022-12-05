@@ -194,7 +194,7 @@ function animation() {
     ground.update();
   })
 
-  if (keys.right.pressed && player.position.x < 400) {
+  if (keys.right.pressed && player.position.x < 600) {
     player.velocity.x = 5;
     platforms.forEach((platform) =>{
       platform.velocity.x = 0;
@@ -205,7 +205,7 @@ function animation() {
     genericObjects.forEach((genericObject) =>{
       genericObject.velocity.x = 0
     });
-  } else if (keys.left.pressed && player.position.x > 100) {
+  } else if (keys.left.pressed && player.position.x > 300) {
     player.velocity.x = -5;
     platforms.forEach((platform) =>{
       platform.velocity.x = 0;

@@ -9,9 +9,6 @@ body{
 img{
     display: none;
 }
-/*canvas{
-    background: url(../img/background.jpg);
-}*/
 h1{
     color: white;
     position: absolute;
