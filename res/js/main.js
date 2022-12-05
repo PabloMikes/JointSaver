@@ -15,10 +15,14 @@ const music = document.getElementById("music");
 
 const audio = document.getElementById("audio");
 
+window.open('', '_self', '');
+
 canvas.width = 1500;
 canvas.height = 1000;
 
 const gravity = 1.5;
+
+const movingCheck = true;
 
 class Player {
   constructor() {
@@ -69,22 +73,9 @@ class Platform {
       x,
       y,
     };
-
-    this.image = image;
-
-    this.width = image.width;
-    this.height = image.height;
-  }
-  draw() {
-    c.drawImage(this.image, this.position.x, this.position.y);
-  }
-}
-
-class GenericObject {
-  constructor({ x, y, image }) {
-    this.position = {
-      x,
-      y,
+    this.velocity = {
+      x: 0,
+      y: 0,
     };
 
     this.image = image;
@@ -95,23 +86,83 @@ class GenericObject {
   draw() {
     c.drawImage(this.image, this.position.x, this.position.y);
   }
+  update(){
+    if(movingCheck == true){
+    this.position.x += this.velocity.x;
+    }
+  }
+}
+
+class Ground {
+  constructor({ x, y, image }) {
+    this.position = {
+      x,
+      y,
+    };
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
+
+    this.image = image;
+
+    this.width = image.width;
+    this.height = image.height;
+  }
+  draw() {
+    c.drawImage(this.image, this.position.x, this.position.y);
+  }
+  update(){
+    if(movingCheck == true){
+    this.position.x += this.velocity.x;
+    }
+  }
+}
+
+class GenericObject {
+  constructor({ x, y, image }) {
+    this.position = {
+      x,
+      y,
+    };
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
+
+    this.image = image;
+
+    this.width = image.width;
+    this.height = image.height;
+  }
+  draw() {
+    c.drawImage(this.image, this.position.x, this.position.y);
+  }
+  update(){
+    if(movingCheck == true){
+    this.position.x += this.velocity.x;
+    }
+  }
 }
 
 //spawn
 const player = new Player(); //spawn player
 
 const platforms = [
-  //ground
-  new Platform({ x: 0, y: 865, image: groundImage }),
-  new Platform({ x: groundImage.width - 1, y: 865, image: groundImage }),
-  new Platform({ x: groundImage.width + 856, y: 865, image: groundImage }),
-  //platforms
   new Platform({ x: 800, y: 670, image: platformImage }),
+  new Platform({ x: 1000, y: 670, image: platformImage }),
+  new Platform({ x: 1000, y: 470, image: platformImage }),
 ];
 
 const genericObjects = [
   new GenericObject({ x: 0, y: 0, image: backgroundImage }),
 ];
+
+const grounds = [
+    new Ground({ x: 0, y: 865, image: groundImage }),
+    new Ground({ x: groundImage.width - 1, y: 865, image: groundImage }),
+    new Ground({ x: groundImage.width + 856, y: 865, image: groundImage }),
+]
 
 //bind
 const keys = {
@@ -136,11 +187,18 @@ function animation() {
 
   genericObjects.forEach((genericObject) => {
     genericObject.draw();
+    genericObject.update();
   });
 
   platforms.forEach((platform) => {
     platform.draw();
+    platform.update();
   });
+
+  grounds.forEach((ground) =>{
+    ground.draw();
+    ground.update();
+  })
 
   if (keys.right.pressed && player.position.x < 400) {
     player.velocity.x = 5;
@@ -148,28 +206,46 @@ function animation() {
     player.velocity.x = -5;
   } else {
     player.velocity.x = 0;
-
+    
     if (keys.right.pressed) {
       platforms.forEach((platform) => {
-        platform.position.x -= 5;
+        platform.velocity.x = -5;
       });
       genericObjects.forEach((genericObjects) => {
-        genericObjects.position.x -= 2;
+        genericObjects.velocity.x = -2;
       });
-    } else if (keys.left.pressed) {
+      grounds.forEach((grounds) =>{
+        grounds.velocity.x = -5;
+      })
+    } 
+    else if (keys.left.pressed) {
       platforms.forEach((platform) => {
-        platform.position.x += 5;
+        platform.velocity.x = 5;
       });
       genericObjects.forEach((genericObjects) => {
-        genericObjects.position.x += 2;
+        genericObjects.velocity.x = 2;
       });
+      grounds.forEach((grounds) =>{
+        grounds.velocity.x = 5;
+      })
+    }
+    else{
+      platforms.forEach((platform) => {
+        platform.velocity.x = 0;
+      });
+      genericObjects.forEach((genericObjects) => {
+        genericObjects.velocity.x = 0;
+      });
+      grounds.forEach((grounds) =>{
+        grounds.velocity.x = 0;
+      })
     }
   }
   if (keys.up.pressed) {
     player.velocity.y = -20;
   }
 
-  //colision detection
+  //colision detection platforms
   platforms.forEach((platform) => {
     if (
       player.position.y + player.height + player.velocity.y >=
@@ -191,6 +267,44 @@ function animation() {
     ) {
       player.velocity.x = 0;
     }
+    if(platform.position.x + platform.velocity.x <= player.position.x + player.width &&
+      platform.position.y <= player.position.y + player.height &&
+      platform.position.x + platform.velocity.x + platform.width >= player.position.x &&
+      platform.position.y + platform.height >= player.position.y){
+      platforms.forEach((platform) =>{
+        platform.velocity.x = 0;
+      })
+      grounds.forEach((ground) =>{
+        ground.velocity.x = 0
+      });
+      genericObjects.forEach((genericObject) =>{
+        genericObject.velocity.x = 0
+      });
+    }
+  });
+
+  //grounds
+  grounds.forEach((ground) => {
+    if (
+      player.position.y + player.height + player.velocity.y >=
+        ground.position.y &&
+      player.position.x + player.width >= ground.position.x &&
+      player.position.x <= ground.position.x + ground.width &&
+      player.position.y + player.velocity.y <=
+      ground.position.y + ground.height
+    ) {
+      player.velocity.y = 0;
+    }
+    if (
+      player.position.x + player.width + player.velocity.x >=
+      ground.position.x &&
+      player.position.y + player.height >= ground.position.y &&
+      player.position.y <= ground.position.y + ground.height &&
+      player.position.x + player.velocity.x <=
+      ground.position.x + ground.width
+    ) {
+      player.velocity.x = 0;
+    } 
   });
   player.update();
 }
