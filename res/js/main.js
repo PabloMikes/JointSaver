@@ -18,7 +18,7 @@ const audio = document.getElementById("audio");
 window.open('', '_self', '');
 
 canvas.width = 1500;
-canvas.height = 1000;
+canvas.height = 950;
 
 const gravity = 1.5;
 
@@ -149,9 +149,9 @@ class GenericObject {
 const player = new Player(); //spawn player
 
 const platforms = [
-  new Platform({ x: 800, y: 670, image: platformImage }),
-  new Platform({ x: 1000, y: 670, image: platformImage }),
-  new Platform({ x: 1000, y: 470, image: platformImage }),
+  new Platform({ x: 800, y: 625, image: platformImage }),
+  new Platform({ x: 1000, y: 625, image: platformImage }),
+  new Platform({ x: 1000, y: 425, image: platformImage }),
 ];
 
 const genericObjects = [
@@ -159,9 +159,9 @@ const genericObjects = [
 ];
 
 const grounds = [
-    new Ground({ x: 0, y: 865, image: groundImage }),
-    new Ground({ x: groundImage.width - 1, y: 865, image: groundImage }),
-    new Ground({ x: groundImage.width + 856, y: 865, image: groundImage }),
+    new Ground({ x: 0, y: 825, image: groundImage }),
+    new Ground({ x: groundImage.width - 1, y: 825, image: groundImage }),
+    new Ground({ x: groundImage.width + 856, y: 825, image: groundImage }),
 ]
 
 //bind
@@ -202,8 +202,26 @@ function animation() {
 
   if (keys.right.pressed && player.position.x < 400) {
     player.velocity.x = 5;
+    platforms.forEach((platform) =>{
+      platform.velocity.x = 0;
+    })
+    grounds.forEach((ground) =>{
+      ground.velocity.x = 0
+    });
+    genericObjects.forEach((genericObject) =>{
+      genericObject.velocity.x = 0
+    });
   } else if (keys.left.pressed && player.position.x > 100) {
     player.velocity.x = -5;
+    platforms.forEach((platform) =>{
+      platform.velocity.x = 0;
+    })
+    grounds.forEach((ground) =>{
+      ground.velocity.x = 0
+    });
+    genericObjects.forEach((genericObject) =>{
+      genericObject.velocity.x = 0
+    });
   } else {
     player.velocity.x = 0;
     
