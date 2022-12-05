@@ -22,8 +22,6 @@ canvas.height = 950;
 
 const gravity = 1.5;
 
-const movingCheck = true;
-
 class Player {
   constructor() {
     this.position = {
@@ -44,6 +42,7 @@ class Player {
   }
 
   update() {
+    if(game.style.display == "block"){
     this.draw();
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
@@ -53,6 +52,7 @@ class Player {
     } else {
       this.velocity.y = 0;
     }
+  }
   }
 }
 
@@ -87,9 +87,7 @@ class Platform {
     c.drawImage(this.image, this.position.x, this.position.y);
   }
   update(){
-    if(movingCheck == true){
     this.position.x += this.velocity.x;
-    }
   }
 }
 
@@ -113,9 +111,7 @@ class Ground {
     c.drawImage(this.image, this.position.x, this.position.y);
   }
   update(){
-    if(movingCheck == true){
     this.position.x += this.velocity.x;
-    }
   }
 }
 
@@ -139,9 +135,7 @@ class GenericObject {
     c.drawImage(this.image, this.position.x, this.position.y);
   }
   update(){
-    if(movingCheck == true){
     this.position.x += this.velocity.x;
-    }
   }
 }
 
