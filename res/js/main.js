@@ -15,6 +15,8 @@ const music = document.getElementById("music");
 
 const audio = document.getElementById("audio");
 
+window.open('', '_self', '');
+
 canvas.width = 1500;
 canvas.height = 1000;
 
