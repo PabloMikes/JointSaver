@@ -150,12 +150,19 @@ const platforms = [
 
 const genericObjects = [
   new GenericObject({ x: 0, y: 0, image: backgroundImage }),
+  new GenericObject({ x: 1000, y: 0, image: backgroundImage }),
+  new GenericObject({ x: 1000 * 2, y: 0, image: backgroundImage }),
 ];
 
 const grounds = [
   new Ground({ x: 0, y: 825, image: groundImage }),
   new Ground({ x: groundImage.width - 1, y: 825, image: groundImage }),
-  new Ground({ x: groundImage.width + 856, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 2 -1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 3 -1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 4 -1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 5 -1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 6 -1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 7 -1, y: 825, image: groundImage }),
 ];
 
 let offSet = 0;
