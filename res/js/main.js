@@ -15,7 +15,7 @@ const music = document.getElementById("music");
 
 const audio = document.getElementById("audio");
 
-window.open('', '_self', '');
+window.open("", "_self", "");
 
 canvas.width = 1500;
 canvas.height = 950;
@@ -42,17 +42,17 @@ class Player {
   }
 
   update() {
-    if(game.style.display == "block"){
-    this.draw();
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
+    if (game.style.display == "block") {
+      this.draw();
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y;
 
-    if (this.position.y + this.height + this.velocity.y <= canvas.height) {
-      this.velocity.y += gravity;
-    } else {
-      this.velocity.y = 0;
+      if (this.position.y + this.height + this.velocity.y <= canvas.height) {
+        this.velocity.y += gravity;
+      } else {
+        this.velocity.y = 0;
+      }
     }
-  }
   }
 }
 
@@ -86,7 +86,7 @@ class Platform {
   draw() {
     c.drawImage(this.image, this.position.x, this.position.y);
   }
-  update(){
+  update() {
     this.position.x += this.velocity.x;
   }
 }
@@ -110,7 +110,7 @@ class Ground {
   draw() {
     c.drawImage(this.image, this.position.x, this.position.y);
   }
-  update(){
+  update() {
     this.position.x += this.velocity.x;
   }
 }
@@ -134,7 +134,7 @@ class GenericObject {
   draw() {
     c.drawImage(this.image, this.position.x, this.position.y);
   }
-  update(){
+  update() {
     this.position.x += this.velocity.x;
   }
 }
@@ -153,10 +153,12 @@ const genericObjects = [
 ];
 
 const grounds = [
-    new Ground({ x: 0, y: 825, image: groundImage }),
-    new Ground({ x: groundImage.width - 1, y: 825, image: groundImage }),
-    new Ground({ x: groundImage.width + 856, y: 825, image: groundImage }),
-]
+  new Ground({ x: 0, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width + 856, y: 825, image: groundImage }),
+];
+
+let offSet = 0;
 
 //bind
 const keys = {
@@ -189,74 +191,103 @@ function animation() {
     platform.update();
   });
 
-  grounds.forEach((ground) =>{
+  grounds.forEach((ground) => {
     ground.draw();
     ground.update();
-  })
+  });
 
-  if (keys.right.pressed && player.position.x < 600) {
+  if (player.position.x <= 400 && offSet == 0) {
+    if (keys.right.pressed) {
+      player.velocity.x = 5;
+      platforms.forEach((platform) => {
+        platform.velocity.x = 0;
+      });
+      grounds.forEach((ground) => {
+        ground.velocity.x = 0;
+      });
+      genericObjects.forEach((genericObject) => {
+        genericObject.velocity.x = 0;
+      });
+    } else if (keys.left.pressed) {
+      player.velocity.x = -5;
+      platforms.forEach((platform) => {
+        platform.velocity.x = 0;
+      });
+      grounds.forEach((ground) => {
+        ground.velocity.x = 0;
+      });
+      genericObjects.forEach((genericObject) => {
+        genericObject.velocity.x = 0;
+      });
+    } else {
+      player.velocity.x = 0;
+    }
+  } else if (keys.right.pressed && player.position.x < 600) {
     player.velocity.x = 5;
-    platforms.forEach((platform) =>{
+    platforms.forEach((platform) => {
       platform.velocity.x = 0;
-    })
-    grounds.forEach((ground) =>{
-      ground.velocity.x = 0
     });
-    genericObjects.forEach((genericObject) =>{
-      genericObject.velocity.x = 0
+    grounds.forEach((ground) => {
+      ground.velocity.x = 0;
+    });
+    genericObjects.forEach((genericObject) => {
+      genericObject.velocity.x = 0;
     });
   } else if (keys.left.pressed && player.position.x > 300) {
     player.velocity.x = -5;
-    platforms.forEach((platform) =>{
+    platforms.forEach((platform) => {
       platform.velocity.x = 0;
-    })
-    grounds.forEach((ground) =>{
-      ground.velocity.x = 0
     });
-    genericObjects.forEach((genericObject) =>{
-      genericObject.velocity.x = 0
+    grounds.forEach((ground) => {
+      ground.velocity.x = 0;
+    });
+    genericObjects.forEach((genericObject) => {
+      genericObject.velocity.x = 0;
     });
   } else {
     player.velocity.x = 0;
-    
+
     if (keys.right.pressed) {
+      offSet -= 5;
       platforms.forEach((platform) => {
         platform.velocity.x = -5;
       });
       genericObjects.forEach((genericObjects) => {
         genericObjects.velocity.x = -2;
       });
-      grounds.forEach((grounds) =>{
+      grounds.forEach((grounds) => {
         grounds.velocity.x = -5;
-      })
-    } 
-    else if (keys.left.pressed) {
+      });
+    } else if (keys.left.pressed) {
+      offSet += 5;
       platforms.forEach((platform) => {
         platform.velocity.x = 5;
       });
       genericObjects.forEach((genericObjects) => {
         genericObjects.velocity.x = 2;
       });
-      grounds.forEach((grounds) =>{
+      grounds.forEach((grounds) => {
         grounds.velocity.x = 5;
-      })
-    }
-    else{
+      });
+    } else {
       platforms.forEach((platform) => {
         platform.velocity.x = 0;
       });
       genericObjects.forEach((genericObjects) => {
         genericObjects.velocity.x = 0;
       });
-      grounds.forEach((grounds) =>{
+      grounds.forEach((grounds) => {
         grounds.velocity.x = 0;
-      })
+      });
     }
   }
   if (keys.up.pressed) {
     player.velocity.y = -20;
   }
 
+  if (player.position.x + player.velocity.x <= 0) {
+    player.velocity.x = 0;
+  }
   //colision detection platforms
   platforms.forEach((platform) => {
     if (
@@ -279,18 +310,22 @@ function animation() {
     ) {
       player.velocity.x = 0;
     }
-    if(platform.position.x + platform.velocity.x <= player.position.x + player.width &&
+    if (
+      platform.position.x + platform.velocity.x <=
+        player.position.x + player.width &&
       platform.position.y <= player.position.y + player.height &&
-      platform.position.x + platform.velocity.x + platform.width >= player.position.x &&
-      platform.position.y + platform.height >= player.position.y){
-      platforms.forEach((platform) =>{
+      platform.position.x + platform.velocity.x + platform.width >=
+        player.position.x &&
+      platform.position.y + platform.height >= player.position.y
+    ) {
+      platforms.forEach((platform) => {
         platform.velocity.x = 0;
-      })
-      grounds.forEach((ground) =>{
-        ground.velocity.x = 0
       });
-      genericObjects.forEach((genericObject) =>{
-        genericObject.velocity.x = 0
+      grounds.forEach((ground) => {
+        ground.velocity.x = 0;
+      });
+      genericObjects.forEach((genericObject) => {
+        genericObject.velocity.x = 0;
       });
     }
   });
@@ -302,21 +337,19 @@ function animation() {
         ground.position.y &&
       player.position.x + player.width >= ground.position.x &&
       player.position.x <= ground.position.x + ground.width &&
-      player.position.y + player.velocity.y <=
-      ground.position.y + ground.height
+      player.position.y + player.velocity.y <= ground.position.y + ground.height
     ) {
       player.velocity.y = 0;
     }
     if (
       player.position.x + player.width + player.velocity.x >=
-      ground.position.x &&
+        ground.position.x &&
       player.position.y + player.height >= ground.position.y &&
       player.position.y <= ground.position.y + ground.height &&
-      player.position.x + player.velocity.x <=
-      ground.position.x + ground.width
+      player.position.x + player.velocity.x <= ground.position.x + ground.width
     ) {
       player.velocity.x = 0;
-    } 
+    }
   });
   player.update();
 }
@@ -394,15 +427,15 @@ play.onclick = () => {
 };
 leave.onclick = () => {
   leave.innerHTML = `fuuu`;
-  setTimeout(() =>{
+  setTimeout(() => {
     window.close();
-  }, 1000)
+  }, 1000);
 };
 leave.onmouseover = () => {
-      leave.style.transition = "1s";
-      leave.style.marginLeft = "400px";
-      leave.style.marginTop = "400px";
-      leave.innerHTML = `lmao no`;
+  leave.style.transition = "1s";
+  leave.style.marginLeft = "400px";
+  leave.style.marginTop = "400px";
+  leave.innerHTML = `lmao no`;
 };
 music.onclick = () => {
   if (music.innerHTML == `🔇`) {
