@@ -442,7 +442,7 @@ play.onclick = () => {
   }, 1000);
 };
 leave.onclick = () => {
-  leave.innerHTML = `fuuu`;
+  leave.innerHTML = `oh cmon`;
   setTimeout(() => {
     window.close();
   }, 1000);
@@ -451,7 +451,7 @@ leave.onmouseover = () => {
   leave.style.transition = "1s";
   leave.style.marginLeft = "400px";
   leave.style.marginTop = "400px";
-  leave.innerHTML = `lmao no`;
+  leave.innerHTML = `yeeee... no`;
 };
 music.onclick = () => {
   if (music.innerHTML == `🔇`) {
