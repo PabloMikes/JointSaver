@@ -166,6 +166,7 @@ const grounds = [
 ];
 
 let offSet = 0;
+let canAddOffSet = true;
 
 //bind
 const keys = {
@@ -202,8 +203,8 @@ function animation() {
     ground.draw();
     ground.update();
   });
-
-  if (player.position.x <= 400 && offSet == 0) {
+//console.log(offSet)
+  if (player.position.x <= 600 && offSet == 0) {
     if (keys.right.pressed) {
       player.velocity.x = 5;
       platforms.forEach((platform) => {
@@ -255,7 +256,9 @@ function animation() {
     player.velocity.x = 0;
 
     if (keys.right.pressed) {
-      offSet -= 5;
+      if(canAddOffSet){
+      offSet += 1;
+      }
       platforms.forEach((platform) => {
         platform.velocity.x = -5;
       });
@@ -266,7 +269,9 @@ function animation() {
         grounds.velocity.x = -5;
       });
     } else if (keys.left.pressed) {
-      offSet += 5;
+      if(canAddOffSet){
+      offSet -= 1;
+      }
       platforms.forEach((platform) => {
         platform.velocity.x = 5;
       });
@@ -334,6 +339,10 @@ function animation() {
       genericObjects.forEach((genericObject) => {
         genericObject.velocity.x = 0;
       });
+      canAddOffSet = false
+    }
+    else{
+      canAddOffSet = true
     }
   });
 
