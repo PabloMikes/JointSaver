@@ -1,8 +1,8 @@
-const platform = (document.querySelector(".myImg").src =
-  "./res/img/platform.png");
+const platform = (document.querySelector(".myImg").src = "./res/img/platform.png");
 const ground = (document.querySelector(".myImg").src = "./res/img/ground.png");
-const background = (document.querySelector(".myImg").src =
-  "./res/img/background.jpg");
+const background = (document.querySelector(".myImg").src = "./res/img/background.jpg");
+const playerImg = (document.querySelector(".myImg").src = "./res/img/player2.png");
+const playerAnimation = (document.querySelector(".myImg").src = "./res/img/playerAnimation.png");
 
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -20,7 +20,18 @@ window.open("", "_self", "");
 canvas.width = 1500;
 canvas.height = 950;
 
-const gravity = 1.5;
+const gravity = 1;
+
+//animation shit
+
+const spriteWidth = 80;
+const spriteHeight = 130;
+
+let runRightX = 0;
+let runRightY = 0;
+
+let gameFrame = 0;
+const staggerFrames = 5;
 
 class Player {
   constructor() {
@@ -32,13 +43,18 @@ class Player {
       x: 0,
       y: 1,
     };
-    this.width = 30;
-    this.height = 30;
+    this.width = spriteWidth;
+    this.height = spriteHeight;
   }
 
   draw() {
     c.fillStyle = "red";
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    if(keys.right.pressed){
+      c.drawImage(playerAnim, runRightX * spriteWidth, runRightY * spriteHeight, 58, 98, this.position.x, this.position.y + 7, spriteWidth, spriteHeight)
+    }
+    else{
+      c.drawImage(playerImage, this.position.x, this.position.y + 7, spriteWidth + 5, spriteHeight)
+    }
   }
 
   update() {
@@ -66,6 +82,8 @@ function createImage(imageSrc) {
 const groundImage = createImage(ground);
 const platformImage = createImage(platform);
 const backgroundImage = createImage(background);
+const playerImage = createImage(playerImg);
+const playerAnim = createImage(playerAnimation);
 
 class Platform {
   constructor({ x, y, image }) {
@@ -187,6 +205,20 @@ const keys = {
 //animation / C# void Update()
 function animation() {
   requestAnimationFrame(animation);
+
+  if(keys.right.pressed){
+    if(gameFrame % staggerFrames == 0){
+      if(runRightX < 5){
+        runRightX += 0.75;
+        console.log("negr")
+      }
+      else{
+        runRightX = 0
+      }
+    }
+  }
+  gameFrame++;
+
   c.clearRect(0, 0, canvas.width, canvas.height);
 
   genericObjects.forEach((genericObject) => {
