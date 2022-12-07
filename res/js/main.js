@@ -1,8 +1,12 @@
-const platform = (document.querySelector(".myImg").src = "./res/img/platform.png");
+const platform = (document.querySelector(".myImg").src =
+  "./res/img/platform.png");
 const ground = (document.querySelector(".myImg").src = "./res/img/ground.png");
-const background = (document.querySelector(".myImg").src = "./res/img/background.jpg");
-const playerImg = (document.querySelector(".myImg").src = "./res/img/player2.png");
-const playerAnimation = (document.querySelector(".myImg").src = "./res/img/playerAnimation.png");
+const background = (document.querySelector(".myImg").src =
+  "./res/img/background.jpg");
+const playerImg = (document.querySelector(".myImg").src =
+  "./res/img/player2.png");
+const playerAnimation = (document.querySelector(".myImg").src =
+  "./res/img/test3.png");
 
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -28,7 +32,8 @@ const spriteWidth = 80;
 const spriteHeight = 130;
 
 let runRightX = 0;
-let runRightY = 0;
+let jumpX = 0;
+let fallX = 0;
 
 let gameFrame = 0;
 const staggerFrames = 5;
@@ -45,15 +50,57 @@ class Player {
     };
     this.width = spriteWidth;
     this.height = spriteHeight;
+    this.check = 0;
+    this.groundCheck = false;
+    this.platformCheck = false;
   }
 
   draw() {
     c.fillStyle = "red";
-    if(keys.right.pressed){
-      c.drawImage(playerAnim, runRightX * spriteWidth, runRightY * spriteHeight, 58, 98, this.position.x, this.position.y + 7, spriteWidth, spriteHeight)
-    }
-    else{
-      c.drawImage(playerImage, this.position.x, this.position.y + 7, spriteWidth + 5, spriteHeight)
+    if (this.velocity.y < 0) {
+      c.drawImage(
+        playerAnim,
+        jumpX * spriteWidth,
+        0.75 * spriteHeight,
+        58,
+        98,
+        this.position.x,
+        this.position.y + 7,
+        spriteWidth,
+        spriteHeight
+      );
+    } else if (this.velocity.y > 0) {
+      c.drawImage(
+        playerAnim,
+        fallX * spriteWidth,
+        1.5 * spriteHeight,
+        58,
+        98,
+        this.position.x,
+        this.position.y + 7,
+        spriteWidth,
+        spriteHeight
+      );
+    } else if (keys.right.pressed) {
+      c.drawImage(
+        playerAnim,
+        runRightX * spriteWidth,
+        0 * spriteHeight,
+        58,
+        98,
+        this.position.x,
+        this.position.y + 7,
+        spriteWidth,
+        spriteHeight
+      );
+    } else {
+      c.drawImage(
+        playerImage,
+        this.position.x,
+        this.position.y + 7,
+        spriteWidth + 5,
+        spriteHeight
+      );
     }
   }
 
@@ -95,7 +142,6 @@ class Platform {
       x: 0,
       y: 0,
     };
-
     this.image = image;
 
     this.width = image.width;
@@ -175,12 +221,12 @@ const genericObjects = [
 const grounds = [
   new Ground({ x: 0, y: 825, image: groundImage }),
   new Ground({ x: groundImage.width - 1, y: 825, image: groundImage }),
-  new Ground({ x: groundImage.width * 2 -1, y: 825, image: groundImage }),
-  new Ground({ x: groundImage.width * 3 -1, y: 825, image: groundImage }),
-  new Ground({ x: groundImage.width * 4 -1, y: 825, image: groundImage }),
-  new Ground({ x: groundImage.width * 5 -1, y: 825, image: groundImage }),
-  new Ground({ x: groundImage.width * 6 -1, y: 825, image: groundImage }),
-  new Ground({ x: groundImage.width * 7 -1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 2 - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 3 - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 4 - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 5 - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 6 - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 7 - 1, y: 825, image: groundImage }),
 ];
 
 let offSet = 0;
@@ -206,14 +252,28 @@ const keys = {
 function animation() {
   requestAnimationFrame(animation);
 
-  if(keys.right.pressed){
-    if(gameFrame % staggerFrames == 0){
-      if(runRightX < 5){
-        runRightX += 0.75;
-        console.log("negr")
+  if (keys.up.pressed) {
+    if (gameFrame % staggerFrames == 0) {
+      if (jumpX < 2.5) {
+        jumpX += 0.75;
+      } else {
+        jumpX = 0;
       }
-      else{
-        runRightX = 0
+    }
+  } else if (keys.right.pressed) {
+    if (gameFrame % staggerFrames == 0) {
+      if (runRightX < 5) {
+        runRightX += 0.75;
+      } else {
+        runRightX = 0;
+      }
+    }
+  } else if (player.velocity.y > 0) {
+    if (gameFrame % staggerFrames == 0) {
+      if (fallX < 2) {
+        fallX += 0.75;
+      } else {
+        fallX = 0;
       }
     }
   }
@@ -235,7 +295,7 @@ function animation() {
     ground.draw();
     ground.update();
   });
-//console.log(offSet)
+
   if (player.position.x <= 600 && offSet == 0) {
     if (keys.right.pressed) {
       player.velocity.x = 5;
@@ -288,9 +348,10 @@ function animation() {
     player.velocity.x = 0;
 
     if (keys.right.pressed) {
-      if(canAddOffSet){
-      offSet += 1;
+      if (canAddOffSet) {
+        offSet += 1;
       }
+      player.check = 5;
       platforms.forEach((platform) => {
         platform.velocity.x = -5;
       });
@@ -301,9 +362,10 @@ function animation() {
         grounds.velocity.x = -5;
       });
     } else if (keys.left.pressed) {
-      if(canAddOffSet){
-      offSet -= 1;
+      if (canAddOffSet) {
+        offSet -= 1;
       }
+      player.check = -5;
       platforms.forEach((platform) => {
         platform.velocity.x = 5;
       });
@@ -323,11 +385,15 @@ function animation() {
       grounds.forEach((grounds) => {
         grounds.velocity.x = 0;
       });
+      player.check = 0;
     }
   }
   if (keys.up.pressed) {
-    player.velocity.y = -20;
+    if (player.platformCheck || player.groundCheck) {
+      player.velocity.y = -20;
+    }
   }
+  console.log(player.platformCheck);
 
   if (player.position.x + player.velocity.x <= 0) {
     player.velocity.x = 0;
@@ -343,6 +409,8 @@ function animation() {
         platform.position.y + platform.height
     ) {
       player.velocity.y = 0;
+      player.platformCheck = true;
+      console.log("negr") //NEDORESENO NIZKA MOZKOVA KAPACITA PACIENT ZEMREL 8.12 0:10
     }
     if (
       player.position.x + player.width + player.velocity.x >=
@@ -353,6 +421,7 @@ function animation() {
         platform.position.x + platform.width
     ) {
       player.velocity.x = 0;
+      
     }
     if (
       platform.position.x + platform.velocity.x <=
@@ -371,12 +440,25 @@ function animation() {
       genericObjects.forEach((genericObject) => {
         genericObject.velocity.x = 0;
       });
-      canAddOffSet = false
+      player.check = 0;
     }
-    else{
-      canAddOffSet = true
-    }
+    /*if (
+      player.position.y + player.height + 2>= platform.position.y &&
+      player.position.y - 2 <= platform.position.y + platform.height
+    ) {
+      player.platformCheck = true;
+    } else {
+      player.platformCheck = false;
+    }*/
   });
+  if (
+    (player.velocity.x == 0 && player.check == 5) ||
+    (player.velocity.x == 0 && player.check == -5)
+  ) {
+    canAddOffSet = true;
+  } else {
+    canAddOffSet = false;
+  }
 
   //grounds
   grounds.forEach((ground) => {
@@ -397,6 +479,11 @@ function animation() {
       player.position.x + player.velocity.x <= ground.position.x + ground.width
     ) {
       player.velocity.x = 0;
+    }
+    if (player.position.y + player.height + 2 >= ground.position.y) {
+      player.groundCheck = true;
+    } else {
+      player.groundCheck = false;
     }
   });
   player.update();
@@ -486,13 +573,13 @@ leave.onmouseover = () => {
   leave.innerHTML = `yeeee... no`;
 };
 music.onclick = () => {
-  if (music.innerHTML == `🔇`) {
+  if (music.innerHTML == `🔊`) {
     audio.pause();
     audio.currentTime = 0;
-    music.innerHTML = `🔊`;
+    music.innerHTML = `🔇`;
   } else {
     audio.play();
     audio.volume = 0.2;
-    music.innerHTML = `🔇`;
+    music.innerHTML = `🔊`;
   }
 };
