@@ -167,7 +167,6 @@ class Ground {
     };
 
     this.image = image;
-
     this.width = image.width;
     this.height = image.height;
   }
@@ -207,8 +206,8 @@ class GenericObject {
 const player = new Player(); //spawn player
 
 const platforms = [
-  new Platform({ x: 800, y: 625, image: platformImage }),
   new Platform({ x: 1000, y: 625, image: platformImage }),
+  new Platform({ x: 800, y: 625, image: platformImage }),
   new Platform({ x: 1000, y: 425, image: platformImage }),
 ];
 
@@ -409,8 +408,11 @@ function animation() {
         platform.position.y + platform.height
     ) {
       player.velocity.y = 0;
-      player.platformCheck = true;
-      console.log("negr") //NEDORESENO NIZKA MOZKOVA KAPACITA PACIENT ZEMREL 8.12 0:10
+      player.platformCheck = true
+    }
+    if(player.position.y + player.height + 5 < platform.position.y || 
+      player.position.y - 5 > platform.position.y + platform.height){
+      player.platformCheck = false
     }
     if (
       player.position.x + player.width + player.velocity.x >=
@@ -421,7 +423,6 @@ function animation() {
         platform.position.x + platform.width
     ) {
       player.velocity.x = 0;
-      
     }
     if (
       platform.position.x + platform.velocity.x <=
@@ -442,15 +443,8 @@ function animation() {
       });
       player.check = 0;
     }
-    /*if (
-      player.position.y + player.height + 2>= platform.position.y &&
-      player.position.y - 2 <= platform.position.y + platform.height
-    ) {
-      player.platformCheck = true;
-    } else {
-      player.platformCheck = false;
-    }*/
   });
+  
   if (
     (player.velocity.x == 0 && player.check == 5) ||
     (player.velocity.x == 0 && player.check == -5)
