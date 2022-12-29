@@ -7,6 +7,8 @@ const playerImg = (document.querySelector(".myImg").src =
   "./res/img/player2.png");
 const playerAnimation = (document.querySelector(".myImg").src =
   "./res/img/test4.png");
+const enemyImg = (document.querySelector(".myImg").src =
+  "./res/img/enemy.png");
 
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -16,6 +18,7 @@ const leave = document.getElementById("leave");
 const game = document.getElementById("game");
 const mainMenu = document.getElementById("mainMenu");
 const music = document.getElementById("music");
+const hps = document.getElementsByClassName("heart");
 
 const audio = document.getElementById("audio");
 
@@ -26,6 +29,8 @@ canvas.height = 950;
 
 const gravity = 1;
 
+let hp = 3;
+let i = 2;
 //animation shit
 
 const spriteWidth = 80;
@@ -56,6 +61,7 @@ class Player {
     this.check = 0;
     this.groundCheck = false;
     this.platformCheck = false;
+    this.canTakeDmg = true;
   }
 
   draw() {
@@ -173,6 +179,7 @@ const platformImage = createImage(platform);
 const backgroundImage = createImage(background);
 const playerImage = createImage(playerImg);
 const playerAnim = createImage(playerAnimation);
+const enemyImage = createImage(enemyImg);
 
 class Platform {
   constructor({ x, y, image }) {
@@ -194,6 +201,30 @@ class Platform {
   }
   update() {
     this.position.x += this.velocity.x;
+  }
+}
+
+class Enemy {
+  constructor({ x, y, image }) {
+    this.position = {
+      x,
+      y,
+    };
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
+    this.image = image;
+
+    this.width = image.width;
+    this.height = image.height;
+  }
+  draw() {
+    c.drawImage(this.image, this.position.x, this.position.y);
+  }
+  update() {
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
   }
 }
 
@@ -269,6 +300,10 @@ const grounds = [
   new Ground({ x: groundImage.width * 6 - 1, y: 825, image: groundImage }),
   new Ground({ x: groundImage.width * 7 - 1, y: 825, image: groundImage }),
 ];
+
+const enemies = [
+  new Enemy({ x: 100, y: 765, image: enemyImage})
+]
 
 let offSet = 0;
 let canAddOffSet = true;
@@ -364,6 +399,11 @@ function animation() {
     ground.update();
   });
 
+  enemies.forEach((enemy) => {
+    enemy.draw();
+    enemy.update();
+  })
+
   if (player.position.x <= 600 && offSet == 0) {
     if (keys.right.pressed) {
       player.velocity.x = 5;
@@ -376,6 +416,9 @@ function animation() {
       genericObjects.forEach((genericObject) => {
         genericObject.velocity.x = 0;
       });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = 0;
+      })
     } else if (keys.left.pressed) {
       player.velocity.x = -5;
       platforms.forEach((platform) => {
@@ -387,6 +430,9 @@ function animation() {
       genericObjects.forEach((genericObject) => {
         genericObject.velocity.x = 0;
       });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = 0;
+      })
     } else {
       player.velocity.x = 0;
     }
@@ -401,6 +447,9 @@ function animation() {
     genericObjects.forEach((genericObject) => {
       genericObject.velocity.x = 0;
     });
+    enemies.forEach((enemy) => {
+      enemy.velocity.x = 0;
+    })
   } else if (keys.left.pressed && player.position.x > 300) {
     player.velocity.x = -5;
     platforms.forEach((platform) => {
@@ -412,6 +461,9 @@ function animation() {
     genericObjects.forEach((genericObject) => {
       genericObject.velocity.x = 0;
     });
+    enemies.forEach((enemy) => {
+      enemy.velocity.x = 0;
+    })
   } else {
     player.velocity.x = 0;
 
@@ -429,6 +481,9 @@ function animation() {
       grounds.forEach((grounds) => {
         grounds.velocity.x = -5;
       });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = -5;
+      })
     } else if (keys.left.pressed) {
       if (canAddOffSet) {
         offSet -= 1;
@@ -443,6 +498,9 @@ function animation() {
       grounds.forEach((grounds) => {
         grounds.velocity.x = 5;
       });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = 5;
+      })
     } else {
       platforms.forEach((platform) => {
         platform.velocity.x = 0;
@@ -453,6 +511,9 @@ function animation() {
       grounds.forEach((grounds) => {
         grounds.velocity.x = 0;
       });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = 0;
+      })
       player.check = 0;
     }
   }
@@ -461,7 +522,7 @@ function animation() {
       player.velocity.y = -20;
     }
   }
-  console.log(player.platformCheck);
+  console.log(hp);
 
   if (player.position.x + player.velocity.x <= 0) {
     player.velocity.x = 0;
@@ -510,10 +571,72 @@ function animation() {
       genericObjects.forEach((genericObject) => {
         genericObject.velocity.x = 0;
       });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = 0;
+      })
       player.check = 0;
     }
   });
+
+  enemies.forEach((enemy) => {
+    if (
+      player.position.y + player.height + player.velocity.y >=
+      enemy.position.y &&
+      player.position.x + player.width >= enemy.position.x &&
+      player.position.x <= enemy.position.x + enemy.width &&
+      player.position.y + player.velocity.y <=
+      enemy.position.y + enemy.height
+    ) {
+      player.velocity.y = 0;
+      enemy.velocity.y = 15;
+    }
+    if (
+      player.position.x + player.width + player.velocity.x >=
+      enemy.position.x &&
+      player.position.y + player.height >= enemy.position.y &&
+      player.position.y <= enemy.position.y + enemy.height &&
+      player.position.x + player.velocity.x <=
+      enemy.position.x + enemy.width
+    ) {
+      player.velocity.x = 0;
+      if(player.canTakeDmg){
+        hp--;
+        player.canTakeDmg = false;
+        setTimeout(() =>{
+          player.canTakeDmg = true;
+        },1000);
+        hps[i].style.display = "none";
+        i += -1;
+        player.velocity.y = -20
+      }
+    }
+    if (
+      enemy.position.x + enemy.velocity.x <=
+        player.position.x + player.width &&
+        enemy.position.y <= player.position.y + player.height &&
+        enemy.position.x + enemy.velocity.x + enemy.width >=
+        player.position.x &&
+        enemy.position.y + enemy.height >= player.position.y
+    ) {
+      platforms.forEach((platform) => {
+        platform.velocity.x = 0;
+      });
+      grounds.forEach((ground) => {
+        ground.velocity.x = 0;
+      });
+      genericObjects.forEach((genericObject) => {
+        genericObject.velocity.x = 0;
+      });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = 0;
+      })
+    }
+  });
   
+  if(hp == 0){
+    location.reload();
+  }
+
   if (
     (player.velocity.x == 0 && player.check == 5) ||
     (player.velocity.x == 0 && player.check == -5)

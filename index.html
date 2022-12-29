@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JointSaver</title>
-    <link rel="stylesheet" href="./res/css/style.css">
-    <link rel="shortcut icon" href="./res/img/favicon.ico" type="image/x-icon">
-</head>
-<body>
+    <link rel="stylesheet" href="./res/css/style.css" />
+    <link
+      rel="shortcut icon"
+      href="./res/img/favicon.ico"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
     <button id="music">🔇</button>
     <div id="mainMenu">
-        <button id="play">Start journey</button>
-        <button id="leave">Leave</button>
-        <audio src="./res/img/SmokyReview.mp3" loop="loop" id="audio"></audio>
+      <button id="play">Start journey</button>
+      <button id="leave">Leave</button>
+      <audio src="./res/img/SmokyReview.mp3" loop="loop" id="audio"></audio>
     </div>
     <div id="game">
-    <canvas id="firstMap"></canvas>
-    <h1 id="timer">0:00</h1>
+      <canvas id="firstMap"></canvas>
+      <div id="hp">
+        <img src="./res/img/Heart.png" alt="" class="heart" />
+        <img src="./res/img/Heart.png" alt="" class="heart" />
+        <img src="./res/img/Heart.png" alt="" class="heart" />
+      </div>
+      <h1 id="timer">0:00</h1>
     </div>
-    <img src="./res/img/platform.png" alt="" class="myImg">
-    <img src="./res/img/ground.png" alt="" class="myImg">
-    <img src="./res/img/background.jpg" alt="" class="myImg">
+    <img src="./res/img/platform.png" alt="" class="myImg" />
+    <img src="./res/img/ground.png" alt="" class="myImg" />
+    <img src="./res/img/background.jpg" alt="" class="myImg" />
     <script src="./res/js/main.js" type="module"></script>
-</body>
+  </body>
 </html>

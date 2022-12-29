@@ -57,3 +57,9 @@ button{
     bottom: 0;
     right: 0;
 }
+.heart{
+    display: block;
+}
+#hp{
+    display: flex;
+}
