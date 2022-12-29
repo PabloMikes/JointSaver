@@ -6,7 +6,7 @@ const background = (document.querySelector(".myImg").src =
 const playerImg = (document.querySelector(".myImg").src =
   "./res/img/player2.png");
 const playerAnimation = (document.querySelector(".myImg").src =
-  "./res/img/test3.png");
+  "./res/img/test4.png");
 
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
@@ -32,8 +32,11 @@ const spriteWidth = 80;
 const spriteHeight = 130;
 
 let runRightX = 0;
+let runLeftX = 5;
 let jumpX = 0;
+let jumpLeftX = 2.5;
 let fallX = 0;
+let fallLeftX = 2;
 
 let gameFrame = 0;
 const staggerFrames = 5;
@@ -57,7 +60,33 @@ class Player {
 
   draw() {
     c.fillStyle = "red";
-    if (this.velocity.y < 0) {
+    if(this.velocity.y < 0 && keys.left.pressed){
+      c.drawImage(
+        playerAnim,
+        jumpLeftX * spriteWidth + 33,
+        3 * spriteHeight,
+        58,
+        98,
+        this.position.x,
+        this.position.y + 7,
+        spriteWidth,
+        spriteHeight
+      );
+    }
+    else if(this.velocity.y > 0 && keys.left.pressed){
+      c.drawImage(
+        playerAnim,
+        fallLeftX * spriteWidth + 14,
+        3.75 * spriteHeight,
+        58,
+        98,
+        this.position.x,
+        this.position.y + 7,
+        spriteWidth,
+        spriteHeight
+      );
+    }
+    else if (this.velocity.y < 0) {
       c.drawImage(
         playerAnim,
         jumpX * spriteWidth,
@@ -93,7 +122,20 @@ class Player {
         spriteWidth,
         spriteHeight
       );
-    } else {
+    } else if (keys.left.pressed){
+      c.drawImage(
+        playerAnim,
+        runLeftX * spriteWidth + 11,
+        2.25 * spriteHeight,
+        58,
+        98,
+        this.position.x,
+        this.position.y + 7,
+        spriteWidth,
+        spriteHeight
+      );
+    }
+    else {
       c.drawImage(
         playerImage,
         this.position.x,
@@ -250,8 +292,16 @@ const keys = {
 //animation / C# void Update()
 function animation() {
   requestAnimationFrame(animation);
-
-  if (keys.up.pressed) {
+  if(keys.up.pressed && keys.left.pressed){
+    if (gameFrame % staggerFrames == 0) {
+      if (jumpLeftX > 0) {
+        jumpLeftX -= 0.75;
+      } else {
+        jumpLeftX = 2.5;
+      }
+    }
+  }
+  else if (keys.up.pressed) {
     if (gameFrame % staggerFrames == 0) {
       if (jumpX < 2.5) {
         jumpX += 0.75;
@@ -259,7 +309,8 @@ function animation() {
         jumpX = 0;
       }
     }
-  } else if (keys.right.pressed) {
+  } 
+  else if (keys.right.pressed) {
     if (gameFrame % staggerFrames == 0) {
       if (runRightX < 5) {
         runRightX += 0.75;
@@ -267,7 +318,25 @@ function animation() {
         runRightX = 0;
       }
     }
-  } else if (player.velocity.y > 0) {
+  } else if (keys.left.pressed) {
+    if (gameFrame % staggerFrames == 0) {
+      if (runLeftX > 0) {
+        runLeftX -= 0.75;
+      } else {
+        runLeftX = 5;
+      }
+    }
+  }
+  else if (player.velocity.y > 0 && keys.left.pressed) {
+    if (gameFrame % staggerFrames == 0) {
+      if (fallLeftX > 0) {
+        fallLeftX -= 0.75;
+      } else {
+        fallLeftX = 2;
+      }
+    }
+  }
+  else if (player.velocity.y > 0) {
     if (gameFrame % staggerFrames == 0) {
       if (fallX < 2) {
         fallX += 0.75;
