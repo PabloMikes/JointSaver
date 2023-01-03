@@ -62,4 +62,13 @@ button{
 }
 #hp{
     display: flex;
+    flex: 9;
+}
+#score{
+    color: white;
+    font-size: 25px;
+    font-family: "pixel";
+}
+#obal{
+    display: flex;
 }

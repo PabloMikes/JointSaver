@@ -21,6 +21,7 @@ const game = document.getElementById("game");
 const mainMenu = document.getElementById("mainMenu");
 const music = document.getElementById("music");
 const hps = document.getElementsByClassName("heart");
+const scoreCounter = document.getElementById("score");
 
 const audio = document.getElementById("audio");
 
@@ -33,6 +34,7 @@ const gravity = 1;
 
 let hp = 3;
 let i = 2;
+let score = 0;
 //animation shit
 
 const spriteWidth = 80;
@@ -318,6 +320,9 @@ const platforms2 = [
   new Platform2({ x: 1200, y: 675, image: platformImage2}),
   new Platform2({ x: 1400, y: 425, image: platformImage2}),
   new Platform2({ x: 1600, y: 425, image: platformImage2}),
+  new Platform2({ x: 2800, y: 725, image: platformImage2}),
+  new Platform2({ x: 3000, y: 725, image: platformImage2}),
+  new Platform2({ x: 2900, y: 625, image: platformImage2}),
 ]
 
 const genericObjects = [
@@ -338,7 +343,9 @@ const grounds = [
 ];
 
 const enemies = [
-  new Enemy({ x: 100, y: 765, image: enemyImage})
+  new Enemy({ x: 100, y: 765, image: enemyImage}),
+  new Enemy({ x: 1700, y: 765, image: enemyImage}),
+  new Enemy({ x: 900, y: 565, image: enemyImage}),
 ]
 
 let offSet = 0;
@@ -639,8 +646,6 @@ function animation() {
     }
   });
 
-  console.log(player.platformCheck);
-
   platforms2.forEach((platform2) => {
     if (
       player.position.y + player.height + player.velocity.y >=
@@ -701,6 +706,8 @@ function animation() {
     ) {
       player.velocity.y = 0;
       enemy.velocity.y = 15;
+      score += 1000;
+      scoreCounter.innerHTML = `Score: ${score}`
     }
     if (
       player.position.x + player.width + player.velocity.x >=
@@ -722,6 +729,7 @@ function animation() {
         player.velocity.y = -20
       }
     }
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     if (
       enemy.position.x + enemy.velocity.x <=
         player.position.x + player.width &&
@@ -733,6 +741,9 @@ function animation() {
       platforms.forEach((platform) => {
         platform.velocity.x = 0;
       });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = 0;
+      });
       grounds.forEach((ground) => {
         ground.velocity.x = 0;
       });
@@ -742,6 +753,17 @@ function animation() {
       enemies.forEach((enemy) => {
         enemy.velocity.x = 0;
       })
+      player.velocity.x = 0;
+      if(player.canTakeDmg){
+        hp--;
+        player.canTakeDmg = false;
+        setTimeout(() =>{
+          player.canTakeDmg = true;
+        },1000);
+        hps[i].style.display = "none";
+        i += -1;
+        player.velocity.y = -20
+      }
     }
   });
   
