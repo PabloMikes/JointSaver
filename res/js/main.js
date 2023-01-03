@@ -1,5 +1,7 @@
 const platform = (document.querySelector(".myImg").src =
   "./res/img/platform.png");
+const platform2 = (document.querySelector(".myImg").src =
+  "./res/img/platform2.png");
 const ground = (document.querySelector(".myImg").src = "./res/img/ground.png");
 const background = (document.querySelector(".myImg").src =
   "./res/img/background.jpg");
@@ -61,6 +63,7 @@ class Player {
     this.check = 0;
     this.groundCheck = false;
     this.platformCheck = false;
+    this.platformCheck2 = false;
     this.canTakeDmg = true;
   }
 
@@ -176,12 +179,36 @@ function createImage(imageSrc) {
 
 const groundImage = createImage(ground);
 const platformImage = createImage(platform);
+const platformImage2 = createImage(platform2);
 const backgroundImage = createImage(background);
 const playerImage = createImage(playerImg);
 const playerAnim = createImage(playerAnimation);
 const enemyImage = createImage(enemyImg);
 
 class Platform {
+  constructor({ x, y, image }) {
+    this.position = {
+      x,
+      y,
+    };
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
+    this.image = image;
+
+    this.width = image.width;
+    this.height = image.height;
+  }
+  draw() {
+    c.drawImage(this.image, this.position.x, this.position.y);
+  }
+  update() {
+    this.position.x += this.velocity.x;
+  }
+}
+
+class Platform2 {
   constructor({ x, y, image }) {
     this.position = {
       x,
@@ -281,8 +308,17 @@ const player = new Player(); //spawn player
 const platforms = [
   new Platform({ x: 1000, y: 625, image: platformImage }),
   new Platform({ x: 800, y: 625, image: platformImage }),
+  new Platform({ x: 2200, y: 625, image: platformImage }),
   new Platform({ x: 1000, y: 425, image: platformImage }),
+  new Platform({ x: 2000, y: 625, image: platformImage }),
+  new Platform({ x: 2000, y: 425, image: platformImage }),
 ];
+
+const platforms2 = [
+  new Platform2({ x: 1200, y: 675, image: platformImage2}),
+  new Platform2({ x: 1400, y: 425, image: platformImage2}),
+  new Platform2({ x: 1600, y: 425, image: platformImage2}),
+]
 
 const genericObjects = [
   new GenericObject({ x: 0, y: 0, image: backgroundImage }),
@@ -389,6 +425,11 @@ function animation() {
     genericObject.update();
   });
 
+  platforms2.forEach((platform2) => {
+    platform2.draw();
+    platform2.update();
+  })
+
   platforms.forEach((platform) => {
     platform.draw();
     platform.update();
@@ -410,6 +451,9 @@ function animation() {
       platforms.forEach((platform) => {
         platform.velocity.x = 0;
       });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = 0;
+      });
       grounds.forEach((ground) => {
         ground.velocity.x = 0;
       });
@@ -423,6 +467,9 @@ function animation() {
       player.velocity.x = -5;
       platforms.forEach((platform) => {
         platform.velocity.x = 0;
+      });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = 0;
       });
       grounds.forEach((ground) => {
         ground.velocity.x = 0;
@@ -441,6 +488,9 @@ function animation() {
     platforms.forEach((platform) => {
       platform.velocity.x = 0;
     });
+    platforms2.forEach((platform2) => {
+      platform2.velocity.x = 0;
+    });
     grounds.forEach((ground) => {
       ground.velocity.x = 0;
     });
@@ -454,6 +504,9 @@ function animation() {
     player.velocity.x = -5;
     platforms.forEach((platform) => {
       platform.velocity.x = 0;
+    });
+    platforms2.forEach((platform2) => {
+      platform2.velocity.x = 0;
     });
     grounds.forEach((ground) => {
       ground.velocity.x = 0;
@@ -475,6 +528,9 @@ function animation() {
       platforms.forEach((platform) => {
         platform.velocity.x = -5;
       });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = -5;
+      });
       genericObjects.forEach((genericObjects) => {
         genericObjects.velocity.x = -2;
       });
@@ -492,6 +548,9 @@ function animation() {
       platforms.forEach((platform) => {
         platform.velocity.x = 5;
       });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = 5;
+      });
       genericObjects.forEach((genericObjects) => {
         genericObjects.velocity.x = 2;
       });
@@ -504,6 +563,9 @@ function animation() {
     } else {
       platforms.forEach((platform) => {
         platform.velocity.x = 0;
+      });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = 0;
       });
       genericObjects.forEach((genericObjects) => {
         genericObjects.velocity.x = 0;
@@ -518,11 +580,13 @@ function animation() {
     }
   }
   if (keys.up.pressed) {
-    if (player.platformCheck || player.groundCheck) {
-      player.velocity.y = -20;
+    if (player.platformCheck || player.groundCheck || player.platformCheck2) {
+      player.velocity.y = -25;
     }
   }
-  console.log(hp);
+
+  player.platformCheck = false
+  player.platformCheck2 = false
 
   if (player.position.x + player.velocity.x <= 0) {
     player.velocity.x = 0;
@@ -533,16 +597,10 @@ function animation() {
       player.position.y + player.height + player.velocity.y >=
         platform.position.y &&
       player.position.x + player.width >= platform.position.x &&
-      player.position.x <= platform.position.x + platform.width &&
-      player.position.y + player.velocity.y <=
-        platform.position.y + platform.height
+      player.position.x <= platform.position.x + platform.width
     ) {
       player.velocity.y = 0;
       player.platformCheck = true
-    }
-    if(player.position.y + player.height + 5 < platform.position.y || 
-      player.position.y - 5 > platform.position.y + platform.height){
-      player.platformCheck = false
     }
     if (
       player.position.x + player.width + player.velocity.x >=
@@ -564,6 +622,60 @@ function animation() {
     ) {
       platforms.forEach((platform) => {
         platform.velocity.x = 0;
+      });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = 0;
+      });
+      grounds.forEach((ground) => {
+        ground.velocity.x = 0;
+      });
+      genericObjects.forEach((genericObject) => {
+        genericObject.velocity.x = 0;
+      });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = 0;
+      })
+      player.check = 0;
+    }
+  });
+
+  console.log(player.platformCheck);
+
+  platforms2.forEach((platform2) => {
+    if (
+      player.position.y + player.height + player.velocity.y >=
+        platform2.position.y &&
+      player.position.x + player.width >= platform2.position.x &&
+      player.position.x <= platform2.position.x + platform2.width &&
+      player.position.y + player.velocity.y <=
+        platform2.position.y + platform2.height
+    ) {
+      player.velocity.y = 0;
+      player.platformCheck2 = true
+    }
+    if (
+      player.position.x + player.width + player.velocity.x >=
+        platform2.position.x &&
+      player.position.y + player.height >= platform2.position.y &&
+      player.position.y <= platform2.position.y + platform2.height &&
+      player.position.x + player.velocity.x <=
+        platform2.position.x + platform2.width
+    ) {
+      player.velocity.x = 0;
+    }
+    if (
+      platform2.position.x + platform2.velocity.x <=
+        player.position.x + player.width &&
+      platform2.position.y <= player.position.y + player.height &&
+      platform2.position.x + platform2.velocity.x + platform2.width >=
+        player.position.x &&
+      platform2.position.y + platform2.height >= player.position.y
+    ) {
+      platforms.forEach((platform) => {
+        platform.velocity.x = 0;
+      });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = 0;
       });
       grounds.forEach((ground) => {
         ground.velocity.x = 0;
