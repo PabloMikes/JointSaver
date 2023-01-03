@@ -72,3 +72,27 @@ button{
 #obal{
     display: flex;
 }
+#achievement{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100px;
+    height: 100px;
+    background: url("../img/achievement2.png");
+    background-size: cover;
+}
+#achimenu{
+    display: none;
+    width: 1500px;
+    height: 1000px;
+    position: absolute;
+    background-color: yellow;
+    top: 7%;
+}
+.trophys{
+    display: none;
+    margin-left: 50%;
+}
+.trophys:last-child{
+    display: block;
+}

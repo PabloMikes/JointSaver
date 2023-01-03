@@ -22,6 +22,8 @@ const mainMenu = document.getElementById("mainMenu");
 const music = document.getElementById("music");
 const hps = document.getElementsByClassName("heart");
 const scoreCounter = document.getElementById("score");
+const achievement = document.getElementById("achievement");
+const achimenu = document.getElementById("achimenu");
 
 const audio = document.getElementById("audio");
 
@@ -853,6 +855,7 @@ function control(e) {
 play.onclick = () => {
   mainMenu.style.display = "none";
   game.style.display = "block";
+  achievement.style.display = "none"
 
   //timer
   let sekunda = 0;
@@ -903,3 +906,14 @@ music.onclick = () => {
     music.innerHTML = `🔊`;
   }
 };
+
+achievement.onclick = () =>{
+  if(mainMenu.style.display == "flex"){
+    achimenu.style.display = "flex";
+    mainMenu.style.display = "none"
+  }
+  else{
+    achimenu.style.display = "none";
+    mainMenu.style.display = "flex"
+  }
+}
