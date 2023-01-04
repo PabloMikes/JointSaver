@@ -11,11 +11,16 @@ const playerAnimation = (document.querySelector(".myImg").src =
   "./res/img/test4.png");
 const enemyImg = (document.querySelector(".myImg").src =
   "./res/img/enemy.png");
+const brko = (document.querySelector(".myImg").src =
+  "./res/img/brkojakvysity.png");
 
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 const timer = document.getElementById("timer");
 const play = document.getElementById("play");
+const lore = document.getElementById("lore");
+const back = document.getElementById("back");
+const loreText = document.getElementById("loreText");
 const leave = document.getElementById("leave");
 const game = document.getElementById("game");
 const mainMenu = document.getElementById("mainMenu");
@@ -24,8 +29,14 @@ const hps = document.getElementsByClassName("heart");
 const scoreCounter = document.getElementById("score");
 const achievement = document.getElementById("achievement");
 const achimenu = document.getElementById("achimenu");
+const endings = document.getElementsByClassName("ending");
+const accepts = document.getElementsByClassName("accept");
+const trophys = document.getElementsByClassName("trophys");
+const trueReset = document.getElementById("trueReset");
+const leave2 = document.getElementById("leave2");
 
 const audio = document.getElementById("audio");
+const audio3 = document.getElementById("audio3");
 
 window.open("", "_self", "");
 
@@ -51,6 +62,35 @@ let fallLeftX = 2;
 
 let gameFrame = 0;
 const staggerFrames = 5;
+
+let gut = false;
+let bat = false;
+let neutral = false;
+let endingCheck = false;
+
+window.onload = () =>{
+  gut = localStorage.getItem("gut");
+  bat = localStorage.getItem("bat");
+  neutral = localStorage.getItem("neutral");
+  
+  if(gut == null && bat == null && neutral == null){
+    endingCheck = true;
+  }
+  else{
+    if(gut){
+      trophys[3].style.display = "none";
+      trophys[1].style.display = "block";
+    }
+    else if(bat){
+      trophys[3].style.display = "none";
+      trophys[2].style.display = "block";
+    }
+    else if(neutral){
+      trophys[3].style.display = "none";
+      trophys[0].style.display = "block";
+    }
+  }
+}
 
 class Player {
   constructor() {
@@ -188,6 +228,7 @@ const backgroundImage = createImage(background);
 const playerImage = createImage(playerImg);
 const playerAnim = createImage(playerAnimation);
 const enemyImage = createImage(enemyImg);
+const brkoImage = createImage(brko);
 
 class Platform {
   constructor({ x, y, image }) {
@@ -306,8 +347,34 @@ class GenericObject {
   }
 }
 
+class Brko {
+  constructor({ x, y, image }) {
+    this.position = {
+      x,
+      y,
+    };
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
+
+    this.image = image;
+
+    this.width = image.width;
+    this.height = image.height;
+  }
+  draw() {
+    c.drawImage(this.image, this.position.x, this.position.y);
+  }
+  update() {
+    this.position.x += this.velocity.x;
+  }
+}
+
 //spawn
 const player = new Player(); //spawn player
+
+const final = [new Brko({x: 9000, y:675, image: brkoImage})]
 
 const platforms = [
   new Platform({ x: 1000, y: 625, image: platformImage }),
@@ -316,21 +383,74 @@ const platforms = [
   new Platform({ x: 1000, y: 425, image: platformImage }),
   new Platform({ x: 2000, y: 625, image: platformImage }),
   new Platform({ x: 2000, y: 425, image: platformImage }),
+  new Platform({ x: 3600, y: 625, image: platformImage }),
+  new Platform({ x: 3600, y: 425, image: platformImage }),
+  new Platform({ x: 3300, y: 225, image: platformImage }),
+  new Platform({ x: 3300, y: 25, image: platformImage }),
+  new Platform({ x: 3300, y: -75, image: platformImage }),
+  new Platform({ x: 4450, y: 625, image: platformImage }),
+  new Platform({ x: 4450, y: 425, image: platformImage }),
+  new Platform({ x: 4450, y: 250, image: platformImage }),
+  new Platform({ x: 4450, y: -125, image: platformImage }),
+  new Platform({ x: 4650, y: 625, image: platformImage }),
+  new Platform({ x: 4650, y: 425, image: platformImage }),
+  new Platform({ x: 7000, y: 625, image: platformImage }),
+  new Platform({ x: 7000, y: 425, image: platformImage }),
+  new Platform({ x: 7000, y: 225, image: platformImage }),
+  new Platform({ x: 7800, y: 225, image: platformImage }),
+  new Platform({ x: 7800, y: 25, image: platformImage }),
+  new Platform({ x: 8100, y: 25, image: platformImage }),
+  new Platform({ x: 8100, y: -175, image: platformImage }),
+  new Platform({ x: 7800, y: -175, image: platformImage }),
+  new Platform({ x: 8400, y: 625, image: platformImage }),
+  new Platform({ x: 8400, y: 425, image: platformImage }),
+  new Platform({ x: 8400, y: 225, image: platformImage }),
+  new Platform({ x: 9500, y: 225, image: platformImage }),
+  new Platform({ x: 9700, y: 225, image: platformImage }),
+  new Platform({ x: 9900, y: 225, image: platformImage }),
+  new Platform({ x: 10100, y: 225, image: platformImage }),
+  new Platform({ x: 9500, y: 425, image: platformImage }),
+  new Platform({ x: 9700, y: 425, image: platformImage }),
+  new Platform({ x: 9900, y: 425, image: platformImage }),
+  new Platform({ x: 10100, y: 425, image: platformImage }),
+  new Platform({ x: 9500, y: 625, image: platformImage }),
+  new Platform({ x: 9700, y: 625, image: platformImage }),
+  new Platform({ x: 9900, y: 625, image: platformImage }),
+  new Platform({ x: 10100, y: 625, image: platformImage }),
+  new Platform({ x: 9500, y: 25, image: platformImage }),
+  new Platform({ x: 9700, y: 25, image: platformImage }),
+  new Platform({ x: 9900, y: 25, image: platformImage }),
+  new Platform({ x: 10100, y: 25, image: platformImage }),
+  new Platform({ x: 9500, y: -175, image: platformImage }),
+  new Platform({ x: 9700, y: -175, image: platformImage }),
+  new Platform({ x: 9900, y: -175, image: platformImage }),
+  new Platform({ x: 10100, y: -175, image: platformImage }),
 ];
 
 const platforms2 = [
   new Platform2({ x: 1200, y: 675, image: platformImage2}),
+  new Platform2({ x: 0, y: 505, image: platformImage2}),
   new Platform2({ x: 1400, y: 425, image: platformImage2}),
   new Platform2({ x: 1600, y: 425, image: platformImage2}),
   new Platform2({ x: 2800, y: 725, image: platformImage2}),
+  new Platform2({ x: 2600, y: 225, image: platformImage2}),
   new Platform2({ x: 3000, y: 725, image: platformImage2}),
+  new Platform2({ x: 3100, y: 325, image: platformImage2}),
   new Platform2({ x: 2900, y: 625, image: platformImage2}),
+  new Platform2({ x: 3800, y: 425, image: platformImage2}),
+  new Platform2({ x: 4000, y: 425, image: platformImage2}),
+  new Platform2({ x: 5000, y: 425, image: platformImage2}),
+  new Platform2({ x: 5500, y: 425, image: platformImage2}),
+  new Platform2({ x: 6000, y: 425, image: platformImage2}),
+  new Platform2({ x: 6500, y: 375, image: platformImage2}),
+  new Platform2({ x: 7200, y: 375, image: platformImage2}),
 ]
 
 const genericObjects = [
   new GenericObject({ x: 0, y: 0, image: backgroundImage }),
   new GenericObject({ x: 1000, y: 0, image: backgroundImage }),
   new GenericObject({ x: 1000 * 2, y: 0, image: backgroundImage }),
+  new GenericObject({ x: 1000 * 3, y: 0, image: backgroundImage }),
 ];
 
 const grounds = [
@@ -342,12 +462,32 @@ const grounds = [
   new Ground({ x: groundImage.width * 5 - 1, y: 825, image: groundImage }),
   new Ground({ x: groundImage.width * 6 - 1, y: 825, image: groundImage }),
   new Ground({ x: groundImage.width * 7 - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 8 - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 9 - 1, y: 825, image: groundImage }),
+  new Ground({ x: groundImage.width * 10 - 1, y: 825, image: groundImage }),
 ];
 
 const enemies = [
   new Enemy({ x: 100, y: 765, image: enemyImage}),
+  new Enemy({ x: 5, y: 445, image: enemyImage}),
   new Enemy({ x: 1700, y: 765, image: enemyImage}),
+  new Enemy({ x: 1500, y: 365, image: enemyImage}),
   new Enemy({ x: 900, y: 565, image: enemyImage}),
+  new Enemy({ x: 2500, y: 765, image: enemyImage}),
+  new Enemy({ x: 2620, y: 165, image: enemyImage}),
+  new Enemy({ x: 2820, y: 665, image: enemyImage}),
+  new Enemy({ x: 3500, y: 765, image: enemyImage}),
+  new Enemy({ x: 3900, y: 765, image: enemyImage}),
+  new Enemy({ x: 5500, y: 765, image: enemyImage}),
+  new Enemy({ x: 5300, y: 765, image: enemyImage}),
+  new Enemy({ x: 5900, y: 765, image: enemyImage}),
+  new Enemy({ x: 6100, y: 765, image: enemyImage}),
+  new Enemy({ x: 7200, y: 315, image: enemyImage}),
+  new Enemy({ x: 7200, y: 765, image: enemyImage}),
+  new Enemy({ x: 7800, y: 765, image: enemyImage}),
+  new Enemy({ x: 8200, y: 765, image: enemyImage}),
+  new Enemy({ x: 8650, y: 765, image: enemyImage}),
+  new Enemy({ x: 8900, y: 765, image: enemyImage}),
 ]
 
 let offSet = 0;
@@ -454,6 +594,11 @@ function animation() {
     enemy.update();
   })
 
+  final.forEach((final) =>{
+    final.draw();
+    final.update();
+  });
+
   if (player.position.x <= 600 && offSet == 0) {
     if (keys.right.pressed) {
       player.velocity.x = 5;
@@ -472,6 +617,9 @@ function animation() {
       enemies.forEach((enemy) => {
         enemy.velocity.x = 0;
       })
+      final.forEach((final) =>{
+        final.velocity.x = 0;
+      });
     } else if (keys.left.pressed) {
       player.velocity.x = -5;
       platforms.forEach((platform) => {
@@ -489,6 +637,9 @@ function animation() {
       enemies.forEach((enemy) => {
         enemy.velocity.x = 0;
       })
+      final.forEach((final) =>{
+        final.velocity.x = 0;
+      });
     } else {
       player.velocity.x = 0;
     }
@@ -509,6 +660,9 @@ function animation() {
     enemies.forEach((enemy) => {
       enemy.velocity.x = 0;
     })
+    final.forEach((final) =>{
+      final.velocity.x = 0;
+    });
   } else if (keys.left.pressed && player.position.x > 300) {
     player.velocity.x = -5;
     platforms.forEach((platform) => {
@@ -526,6 +680,9 @@ function animation() {
     enemies.forEach((enemy) => {
       enemy.velocity.x = 0;
     })
+    final.forEach((final) =>{
+      final.velocity.x = 0;
+    });
   } else {
     player.velocity.x = 0;
 
@@ -549,6 +706,9 @@ function animation() {
       enemies.forEach((enemy) => {
         enemy.velocity.x = -5;
       })
+      final.forEach((final) =>{
+        final.velocity.x = -5;
+      });
     } else if (keys.left.pressed) {
       if (canAddOffSet) {
         offSet -= 1;
@@ -569,6 +729,9 @@ function animation() {
       enemies.forEach((enemy) => {
         enemy.velocity.x = 5;
       })
+      final.forEach((final) =>{
+        final.velocity.x = 5;
+      });
     } else {
       platforms.forEach((platform) => {
         platform.velocity.x = 0;
@@ -585,6 +748,9 @@ function animation() {
       enemies.forEach((enemy) => {
         enemy.velocity.x = 0;
       })
+      final.forEach((final) =>{
+        final.velocity.x = 0;
+      });
       player.check = 0;
     }
   }
@@ -600,16 +766,18 @@ function animation() {
   if (player.position.x + player.velocity.x <= 0) {
     player.velocity.x = 0;
   }
+
   //colision detection platforms
   platforms.forEach((platform) => {
     if (
       player.position.y + player.height + player.velocity.y >=
         platform.position.y &&
       player.position.x + player.width >= platform.position.x &&
-      player.position.x <= platform.position.x + platform.width
+      player.position.x <= platform.position.x + platform.width && 
+      player.position.y + player.velocity.y <= platform.position.y + platform.height
     ) {
       player.velocity.y = 0;
-      player.platformCheck = true
+      player.platformCheck = true;
     }
     if (
       player.position.x + player.width + player.velocity.x >=
@@ -644,6 +812,9 @@ function animation() {
       enemies.forEach((enemy) => {
         enemy.velocity.x = 0;
       })
+      final.forEach((final) =>{
+        final.velocity.x = 0;
+      });
       player.check = 0;
     }
   });
@@ -693,9 +864,77 @@ function animation() {
       enemies.forEach((enemy) => {
         enemy.velocity.x = 0;
       })
+      final.forEach((final) =>{
+        final.velocity.x = 0;
+      });
       player.check = 0;
     }
   });
+
+  final.forEach((end) => {
+    if (
+      player.position.y + player.height + player.velocity.y >=
+      end.position.y &&
+      player.position.x + player.width >= end.position.x &&
+      player.position.x <= end.position.x + end.width &&
+      player.position.y + player.velocity.y <=
+      end.position.y + end.height
+    ) {
+      player.velocity.y = 0;
+      game.style.display = "none";
+      if(score == 0 && endingCheck){
+        endings[1].style.display = "block"
+      }
+      else if(score == 20000 && endingCheck){
+        endings[2].style.display = "block"
+      }
+      else if(score < 20000 && endingCheck){
+        endings[0].style.display = "block"
+      }
+      else{
+        endings[3].style.display = "block"
+      }
+    }
+    if (
+      player.position.x + player.width + player.velocity.x >=
+      end.position.x &&
+      player.position.y + player.height >= end.position.y &&
+      player.position.y <= end.position.y + end.height &&
+      player.position.x + player.velocity.x <=
+      end.position.x + end.width
+    ) {
+      player.velocity.x = 0;
+    }
+    if (
+      end.position.x + end.velocity.x <=
+        player.position.x + player.width &&
+        end.position.y <= player.position.y + player.height &&
+        end.position.x + end.velocity.x + end.width >=
+        player.position.x &&
+        end.position.y + end.height >= player.position.y
+    ) {
+      platforms.forEach((platform) => {
+        platform.velocity.x = 0;
+      });
+      platforms2.forEach((platform2) => {
+        platform2.velocity.x = 0;
+      });
+      grounds.forEach((ground) => {
+        ground.velocity.x = 0;
+      });
+      genericObjects.forEach((genericObject) => {
+        genericObject.velocity.x = 0;
+      });
+      enemies.forEach((enemy) => {
+        enemy.velocity.x = 0;
+      })
+      final.forEach((final) =>{
+        final.velocity.x = 0;
+      });
+      player.check = 0;
+    }
+  });
+
 
   enemies.forEach((enemy) => {
     if (
@@ -709,7 +948,8 @@ function animation() {
       player.velocity.y = 0;
       enemy.velocity.y = 15;
       score += 1000;
-      scoreCounter.innerHTML = `Score: ${score}`
+      scoreCounter.innerHTML = `Score: ${score}`;
+      audio3.play();
     }
     if (
       player.position.x + player.width + player.velocity.x >=
@@ -754,6 +994,9 @@ function animation() {
       });
       enemies.forEach((enemy) => {
         enemy.velocity.x = 0;
+      })
+      final.forEach((final) =>{
+        final.velocity.x = 0;
       })
       player.velocity.x = 0;
       if(player.canTakeDmg){
@@ -916,4 +1159,43 @@ achievement.onclick = () =>{
     achimenu.style.display = "none";
     mainMenu.style.display = "flex"
   }
+}
+
+accepts[0].onclick = () =>{
+  neutral = true;
+  localStorage.setItem("neutral", neutral)
+  window.close();
+}
+
+accepts[1].onclick = () =>{
+  gut = true;
+  localStorage.setItem("gut", gut)
+  window.close();
+}
+
+accepts[2].onclick = () =>{
+  bat = true;
+  localStorage.setItem("bat", bat)
+  window.close();
+}
+
+leave2.onclick = () =>{
+  window.close();
+}
+
+trueReset.onclick = () =>{
+  localStorage.clear();
+  location.reload();
+}
+
+lore.onclick = () =>{
+  mainMenu.style.display = "none";
+  loreText.style.display = "block";
+  achievement.style.display = "none";
+}
+
+back.onclick = () =>{
+  mainMenu.style.display = "flex";
+  loreText.style.display = "none";
+  achievement.style.display = "block";
 }

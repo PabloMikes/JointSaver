@@ -16,8 +16,10 @@
     <button id="music">🔇</button>
     <div id="mainMenu">
       <button id="play">Start journey</button>
+      <button id="lore">Lore</button>
       <button id="leave">Leave</button>
       <audio src="./res/img/SmokyReview.mp3" loop="loop" id="audio"></audio>
+      <audio src="./res/img/hit.mp3" id="audio3"></audio>
     </div>
     <button id="achievement"></button>
     <div id="game">
@@ -32,12 +34,61 @@
       </div>
       <h1 id="timer">0:00</h1>
     </div>
+    <div class="ending">
+      <h2>Neutral ending</h2>
+      Dobrá práce Tadeáši, úspěšně jsi se dobelhal ke konci Knírové jeskyně a
+      získal jsi zpět své brko.
+      <br />Tady máš tenhle pohár, aby jsi neřekl, že jsi to dělal zbytečně...
+      <br />
+      <img src="./res/img/normal2.png" alt="" class="trophys2" />
+      <br />
+      <button type="button" class="accept">Ok</button><br />
+    </div>
+    <div class="ending">
+      <h2>Pacifist ending</h2>
+      Tadeáši, nevím jestli jseš furt zhulenej a nebo jsi předtím něco pil, ale
+      vypadá to, že jsi si ty malé mršky oblíbil a ani jedné jsi se nezbavil.
+      <br />Jsem překvapen a za odměnu si vem to brko a tento pohár...
+      <br />
+      <img src="./res/img/gut.png" alt="" class="trophys2" />
+      <br />
+      <button class="accept">Ok</button> <br />
+    </div>
+    <div class="ending">
+      <h2>Genocide ending</h2>
+      Do jednoho jsi je zabil bez lítosti...
+      <br />Jakoby, aby tě vzali lopatou. <br />Klasicky další, co nenávidí
+      kníry...
+      <br />
+      <img src="./res/img/bat.png" alt="" class="trophys2" />
+      <br />
+      <button class="accept">Ok</button> <br />
+    </div>
+    <div class="ending">
+      <h2>True reset</h2>
+      Koukám, že se snažíš změnit svou minulost Tadeáši, ale to není tak
+      jednoduché ty závisláku...
+      <br />
+      I přesto že je to zakázané tak ti ale dám další šanci...
+      <br />
+      <button id="trueReset">Ok</button> <br />
+      <button id="leave2">Nah</button><br />
+    </div>
+    <div id="loreText">
+      Jednoho dne se Tadeáš rozhodl, že už ho nebaví počítat matiku a přemýšlet
+      nad fyzikou a tak si pořídil krásné brko a vydal se na Pradouč. <br />
+      Jakmile se dostal na vrchol hory Erbíno, tak se usadil a položil si brko
+      vedle sebe. <br />
+      Bohužel brko se začalo kutálet a spadlo do jeskyne Kníráků...
+      <br />
+      <br /><button id="back">back</button>
+    </div>
     <div id="achimenu">
       <div id="trophy">
-        <img src="./res/img/normal2.png" alt="" class="trophys">
-        <img src="./res/img/gut.png" alt="" class="trophys">
-        <img src="./res/img/bat.png" alt="" class="trophys">
-        <img src="./res/img/gon.png" alt="" class="trophys">
+        <img src="./res/img/normal2.png" alt="" class="trophys" />
+        <img src="./res/img/gut.png" alt="" class="trophys" />
+        <img src="./res/img/bat.png" alt="" class="trophys" />
+        <img src="./res/img/gon.png" alt="" class="trophys" />
       </div>
     </div>
     <img src="./res/img/platform.png" alt="" class="myImg" />

@@ -1,3 +1,6 @@
+*{
+    user-select: none;
+}
 body{
     margin: 0;
     background: black;
@@ -86,7 +89,7 @@ button{
     width: 1500px;
     height: 1000px;
     position: absolute;
-    background-color: yellow;
+    background-color: yellowgreen;
     top: 7%;
 }
 .trophys{
@@ -95,4 +98,31 @@ button{
 }
 .trophys:last-child{
     display: block;
+}
+.ending{
+    color: white;
+    font-size: 35px;
+    margin: 0 auto;
+    display: none;
+}
+
+.trophys2{
+    display: block;
+    margin: 0 auto;
+}
+
+.accept{
+    display: block;
+    margin: 0 auto;
+}
+#loreText{
+    color: white;
+    font-size: 40px;
+    display: none;
+}
+#back{
+    margin: 0 auto;
+}
+a{
+    text-decoration: none;
 }
